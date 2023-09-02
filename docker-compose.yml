@@ -1,8 +1,8 @@
 version: '3'
 
 services:
+  # Node.js application
   app:
-    build:
-      context: .
+    build: .
     ports:
       - "8000:8000"

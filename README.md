@@ -1,58 +1,20 @@
-# TechBlog 💻
-<p align="center">
-<img src="public/img/logo_techblog.svg" alt="TechBlog" title="TechBlog">
-</p>
+# frontend-express-demo
 
-## 📖 Sobre   
-O projeto **TechBlog** foi desenvolvido durante um tutorial feito pela **[Lara Carvalho](https://github.com/laracarvalho)** em seu canal do YouTube, com o intuito de aprender sobre Node.js. O projeto foi desenvolvido completamente do zero utilizando o padrão **MVC**, **EJS** para as views, **Node.js** para o Back-End e **SQLite3** para o banco de dados, o projeto também conta com armazenamento de imagens utilizando **Multer**, **URLs amigáveis**, além de ter realizado um **redesign** do projeto original utilizando o pré-processador **SCSS**.
+**SN Developers: This is a Public repository. Do not add company-specific implementation details.**
 
----
+## Purpose 
 
-## 🚀 Tecnologias e ferramentas utilizadas
-- **HTML5**
-- **SCSS** (convertido para CSS3)
-- **Scout App** (compilador de Sass)
-- **JavaScript**
-- **Node.js**
-- **SQLite**
+This is a public repository used for test purposes.
 
----
+## Usage
 
-## 🖥️ Demonstração
-![TechBlog | Seu portal de notícias de tecnologia favorito.](https://i.imgur.com/gG1d4NL.jpg "TechBlog | Seu portal de notícias de tecnologia favorito.")
+In order to use this demo you'll need to have [Node.js](https://nodejs.org/) installed - this test requires **Node.js 16.14.0+**.
+If you use [NVM](https://github.com/nvm-sh/nvm), you can run `nvm use` to set up the Node / NPM version.
 
----
-
-## 🧰 Dependências
-- **[Body-Parser](https://www.npmjs.com/package/body-parser)**
-- **[EJS](https://ejs.co/) (Embedded JavaScript templating)**
-- **[Express](https://expressjs.com/pt-br/)**
-- **[Multer](https://www.npmjs.com/package/multer)**
-- **[Nodemon](https://nodemon.io/)**
-- **[SQLite](https://www.sqlite.org/index.html)**
-
----
-## 🔧 Como executar o projeto
-```bash
-# Clone o repositório
-git clone https://github.com/devMagno/techblog
-
-# Entre no diretório
-cd techblog
-
-# Baixe as dependências do projeto
-npm i
-
-# Execute o servidor
-npm start
-```
-Feito isso, abra seu navegador favorito e acesse o endereço `http://127.0.0.1:3333/`
-
----
-
-## 📝 Licença
-
-O projeto está sob a licença MIT. Para saber mais, acesse o arquivo [LICENSE](https://github.com/devMagno/techblog/blob/main/LICENSE).
-
----
-**Desenvolvido com 🧡 por [Guilherme Magno](https://github.com/devmagno/).**
+1. Clone this repository on the command line
+2. Make sure the correct version of Node.js (16.14.0+) is installed
+3. Install dependencies with ```npm install```
+4. Make any code changes in this repository. Commands to run and build the application:
+    - Build: ```npm run build```
+    - Start application locally (on port 3000): ```npm start```
+    - Start application locally and watch for changes (on port 3000): ```npm run start:dev```
