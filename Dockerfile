@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Expose the port your Node.js application listens on
-EXPOSE 3000
+EXPOSE 8000
 
 # Command to start your Node.js application
 CMD ["node", "app.js"]
