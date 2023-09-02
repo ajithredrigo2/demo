@@ -1,39 +1,24 @@
-version: '3'
-
 services:
-  # Node.js Application
-  app:
-    build:
-      context: ./app # Path to your Node.js app's Dockerfile
-    container_name: nodejs-app
+  # Mongodb service
+  mongo_db:
+    container_name: db_container
+    image: mongo:latest
     restart: always
-    ports:
-      - "4000:3000" # Map container port to host port
-    depends_on:
-      - db # Ensure MongoDB is started before the app
-   # environment:
-   #   - NODE_ENV=production # Set the Node.js environment to production
-    networks:
-      - app-network
-
-  # MongoDB Database
-  db:
-    image: mongo:4.4 # Use the official MongoDB image
-    container_name: mongodb
-    restart: always
-    ports:
-      - "27017:27017" # Map container port to host port
     volumes:
-      - mongodb-data:/data/db # Persist MongoDB data
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=demo # MongoDB admin username
-      - MONGO_INITDB_ROOT_PASSWORD=87654321 # MongoDB admin password
-    networks:
-      - app-network
+      - mongo_data:/data/db
 
-networks:
-  app-network:
-    driver: bridge
+  # Node api service
+  api:
+    build: .
+    ports:
+      # local->container
+      - 4000:3000
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://db:27017/demo
+      DB_NAME: demo
+    depends_on:
+      - mongo_db
 
 volumes:
-  mongodb-data:
+  mongo_data: {}
