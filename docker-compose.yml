@@ -6,7 +6,10 @@ services:
     restart: always
     volumes:
       - mongo_data:/data/db
-
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin # MongoDB admin username
+      - MONGO_INITDB_ROOT_PASSWORD=87654321 # MongoDB admin password
+      
   # Node api service
   api:
     build: .
