@@ -11,4 +11,5 @@ COPY . .
 EXPOSE 4000
 
 # Command to start your Node.js application
-CMD ["node", "index.js"]
+#CMD ["node", "index.js"]
+CMD ["npm", "start"]
