@@ -1,4 +1,4 @@
-# Dockerize a Laravel Application
+# Dockerize a NodeJS Application
 
 Dockerizing a Node.js application along with MongoDB using Docker Compose is a common practice for creating portable and easily deployable development environments. When you’re finished, you’ll have a demo Nodejs application running on two separate service containers:
 
