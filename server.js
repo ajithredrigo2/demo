@@ -1,85 +1,53 @@
-// Server Dependencies
 const express = require('express');
-const http = require('http');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const morgan = require('morgan');
-const winston = require('./config/winston');
-const helmet = require('helmet');
-
-// Models Imports
-const User = require('./api/models/userModel');
-const Task = require('./api/models/taskModel');
-const Code = require('./api/models/codeModel');
-
-// Init Express
+const exphbs = require('express-handlebars');
+const path = require('path');
+const methodOverride = require('method-override');
+const session = require('express-session');
+const flash = require('connect-flash');
+const passport = require('passport');
+ 
+// Initializations
 const app = express();
-require('dotenv').config();
+require('./config/passport');
 
-// DB Connection
-mongoose.Promise = global.Promise;
-let dev = process.env.DEV;
-mongoose.connect(
-  dev
-    ? `mongodb://${process.env.LOCAL_DB}`
-    : `mongodb://${process.env.PROD_DB}`,
-  {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  },
-  (e) => {
-    if (e) {
-      const dbError = {
-        error: e,
-        msg: 'Error Connecting to Database. Please check MongoDB is running',
-      };
-      console.log(dbError);
-    } else {
-      console.log(`Connected to ${dev ? 'Development' : 'Prod'} Database`);
-    }
-  }
-);
+// settings
+app.set('port', process.env.PORT || 4000);
+app.set('views', path.join(__dirname, 'views'));
+app.engine('.hbs', exphbs({
+  defaultLayout: 'main',
+  layoutsDir: path.join(app.get('views'), 'layouts'),
+  partialsDir: path.join(app.get('views'), 'partials'),
+  extname: '.hbs'
+}));
+app.set('view engine', '.hbs');
 
-// Server Config
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(morgan('combined', { stream: winston.stream }));
-app.use(helmet());
+// middlewares
+app.use(express.urlencoded({extended: false}));
+app.use(methodOverride('_method'));
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
-// Cors Controls
+// Global Variables
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'POST, GET, PATCH, DELETE, OPTIONS'
-  );
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
   next();
 });
-app.use(cors());
 
-// Routes Definitions
-const adminRoutes = require('./api/routes/adminRoutes');
-const authRoutes = require('./api/routes/authRoutes');
-const taskRoutes = require('./api/routes/todoListRoutes');
-adminRoutes(app);
-authRoutes(app);
-taskRoutes(app);
+// routes
+app.use(require('./routes/index.routes'));
+app.use(require('./routes/users.routes'));
+app.use(require('./routes/notes.routes'));
 
-// 404 Handling
-app.use((req, res) => {
-  winston.error(`'Hit 404' - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-  res.status(404).send({ url: req.originalUrl + ' not found' });
-});
+// static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Server Port Controls
-const port = process.env.PORT || '3000';
-app.set('port', port);
-const server = http.createServer(app);
-server.listen(port, () => console.log(`API running on localhost:${port}`));
+module.exports = app;
