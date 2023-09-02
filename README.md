@@ -1,35 +1,114 @@
-## This API is deprecated for a long time because of the website's restriction. Sorry about that, but there's almost no way to fix it.<br>This API is now archived.
+# Nodejs boilerplate REST API
 
-![Erio Touwa](https://static.wikia.nocookie.net/denpaonna/images/8/84/Erio_Touwa_2.jpg/revision/latest?cb=20180226170827)
+## This repo can be cloned/forked and used as a boilerplate for a node REST API
 
-# "Touwa" API
-Welcome to the GitHub page of a REST API called Touwa!
+I built this repo to learn how to make a rest api and server. It was created by following [this tutorial](https://www.codementor.io/olatundegaruba/nodejs-restful-apis-in-10-minutes-q0sgsfhbd), and has been expanded on to service the needs of a boilerplate project. I've also used inspiration from [this awesome dev!](https://github.com/christopherliedtke)
 
-## What is "Touwa"?
-"Touwa" is an **unofficial** REST API that gets information from a Vietnamese R-18 website called [HentaiVN.tv](https://hentaivn.tv). This API can get some important information from the website without any authorization or anything.
+The different things you can do with this server:
 
-This API is currently in development and incomplete, but I will add more functions if I have time.
+- Controllers - deals with database read/write operations and logic.
+- Models - define schemas of objects in collections the database.
+- Routes - defines the API routing for controller functions.
+- Middlewares - helper files, utils and methods. Basically anything that isn't done by a controller.
 
-## Documentations
-The API documentation will be coming soon at [the Wiki page of this repository](https://github.com/LilShieru/Touwa/wiki).
+### Installing & config
 
-## Demo
-You can try the demo version of this API in the Glitch host website:
-[https://touwaapi.glitch.me](https://touwaapi.glitch.me)
+1. Clone repo and run `npm i` to install all packages
 
-## Dependencies used
-* [express](https://www.npmjs.com/package/express) version 4.17.1
-* [jsdom](https://www.npmjs.com/package/jsdom) version 16.6.0
-* [request](https://www.npmjs.com/package/request) version 2.88.2
+2. In the `server.js` file, you can modify the database location and name on line 22
 
-## How to host your own Touwa API
-* Download Node.JS version 12 or later, and clone/download this repository.
-* Install the dependencies with the `npm install` command.
-* After that, just run it with the `node index.js` command and you're done!
+3. Run MongoDB locally with `brew services start mongodb-community`
 
-## Disclaimer
-I'm **NOT** affiliated with HentaiVN.tv. I'm just a HentaiVN.tv user that wants to make something for the website. All rights of the website belong to their respective owners.
+### Running the project
 
-------------------------------
+1. Add a `.env` flie to the root directory when first cloning this project for storing environment variables
 
-Made with <3 by Meir/Nico Levianth/LilShieru.
+2. Add a `JWT_SECRET` to the `.env` file
+
+3. Start the server with nodemon: `npm start`. Currently the default port for the server is `5000` and this can be set in the `.env`. This is to prevent clashes when running the server and clients in dev locally.
+
+4. Restart running server by typing: `rs`
+
+## Available Scripts
+
+- `start` - starts the server
+- `reset` - deletes the node_modules
+- `reinstall` - deletes and then reinstalls the node_modules
+- `test` - runs all unit tests
+- `test:watch` - watches for unit tests that have changed and reruns the test suite
+
+## Current Routes
+
+### Auth Routes
+
+#### `/api/v1/auth/login-user`
+
+```javascript
+  POST:
+  {
+    "email": "",
+    "password": "" (at least 6 characters long and contain a lowercase letter, an uppercase letter, a numeric digit and a special character.)
+  }
+```
+
+#### `/api/v1/auth/create-new-user`
+
+```javascript
+  POST:
+  {
+    "firstName": "", (firstName is optional)
+    "lastName": "", (lastName is optional)
+    "email": "",
+    "password": "" (at least 6 characters long and contain a lowercase letter, an uppercase letter, a numeric digit and a special character.)
+    "password2": ""
+    "acceptedTerms": Boolean
+  }
+```
+
+#### `/api/v1/auth/verification/verify-account/:uniqueId/:secretCode`
+
+This route is activated when a user clicks the link in an email sent to then when creating a new account.
+
+#### `/api/v1/auth/password-reset/get-code`
+
+Allows a user to get a password reset code emailed to them.
+
+```javascript
+  POST:
+  {
+    "email": "",
+    "password": "",
+    "password2": "",
+    "code": "" (this will have been emailed to the user)
+  }
+```
+
+#### `/api/v1/auth/password-reset/verify-code
+
+Allows a user to get a password reset code emailed to them.
+
+```javascript
+  POST:
+  {
+    "email": ""
+  }
+```
+
+#### `/api/v1/auth/delete-account`
+
+Allows a user to delete their account.
+
+```javascript
+  POST:
+  {
+    "password": "",
+    "uniqueId": ""
+  }
+```
+
+#### `/api/v1/auth/check-token-valid-external/:token`
+
+```javascript
+  GET
+  External route to check if a token is valid
+```
