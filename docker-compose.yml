@@ -1,26 +1,27 @@
-version: '3.9'
-
+version: '3'
 services:
-  # Mongodb service
-  mongo_db:
-    container_name: db_container
-    image: mongo:latest
-    restart: always
+  # Node.js application
+  nodejs-app:
+    image: node:14 # Use a Node.js base image
+    container_name: nodejs-app
+    working_dir: /app
     volumes:
-      - mongo_data:/data/db
-
-  # Node api service
-  api:
-    build: .
+      - ./app:/app # Mount the application code into the container
     ports:
-      # local->container
-      - 4000:3000
+      - "4000:3000" # Map container port 3000 to host port 3000
     environment:
-      PORT: 3000
-      MONGODB_URI: mongo://admin@87654321@mongo:27017/"
-      DB_NAME: demo
-    depends_on: 
-      - mongo_db
+      - MONGO_URI=mongodb://mongodb:27017/demo # MongoDB connection URI (use the service name as hostname)
+    depends_on:
+      - mongodb # Ensure MongoDB container is up before starting the app
 
-volumes:
-  mongo_data: {}
+  # MongoDB database
+  mongodb:
+    image: mongo:4.4 # Use the official MongoDB image
+    container_name: mongodb
+    ports:
+      - "27016:27017" # Map container port 27017 to host port 27017
+    volumes:
+      - ./data:/data/db # Persist MongoDB data on the host machine
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin # MongoDB root username
+      - MONGO_INITDB_ROOT_PASSWORD=87654321 # MongoDB root password
