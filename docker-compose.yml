@@ -1,27 +1,39 @@
 version: '3'
-services:
-  # Node.js application
-  nodejs-app:
-    image: node:14 # Use a Node.js base image
-    container_name: nodejs-app
-    working_dir: /app
-    volumes:
-      - ./app:/app # Mount the application code into the container
-    ports:
-      - "4000:3000" # Map container port 3000 to host port 3000
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/demo # MongoDB connection URI (use the service name as hostname)
-    depends_on:
-      - mongodb # Ensure MongoDB container is up before starting the app
 
-  # MongoDB database
-  mongodb:
+services:
+  # Node.js Application
+  app:
+    build:
+      context: ./app # Path to your Node.js app's Dockerfile
+    container_name: nodejs-app
+    restart: always
+    ports:
+      - "4000:3000" # Map container port to host port
+    depends_on:
+      - db # Ensure MongoDB is started before the app
+   # environment:
+   #   - NODE_ENV=production # Set the Node.js environment to production
+    networks:
+      - app-network
+
+  # MongoDB Database
+  db:
     image: mongo:4.4 # Use the official MongoDB image
     container_name: mongodb
+    restart: always
     ports:
-      - "27016:27017" # Map container port 27017 to host port 27017
+      - "27017:27017" # Map container port to host port
     volumes:
-      - ./data:/data/db # Persist MongoDB data on the host machine
+      - mongodb-data:/data/db # Persist MongoDB data
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin # MongoDB root username
-      - MONGO_INITDB_ROOT_PASSWORD=87654321 # MongoDB root password
+      - MONGO_INITDB_ROOT_USERNAME=demo # MongoDB admin username
+      - MONGO_INITDB_ROOT_PASSWORD=87654321 # MongoDB admin password
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
